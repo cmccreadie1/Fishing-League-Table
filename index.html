@@ -33,7 +33,7 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding: 16px;
+      padding: 10px;
       min-height: 100vh;
     }
 
@@ -46,24 +46,29 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
       border-bottom: 2px solid var(--card-border);
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
-    h1 {
-      font-size: 1.8rem;
-      color: var(--primary);
+    .title-input-group {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .league-title-display {
+      font-size: 1.5rem;
+      color: var(--primary);
+      font-weight: 800;
     }
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -71,11 +76,11 @@
       background-color: var(--card-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border);
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
@@ -110,22 +115,24 @@
 
     .nav-tabs {
       display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 6px;
+      margin-bottom: 12px;
       border-bottom: 1px solid var(--card-border);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
+      overflow-x: auto;
     }
 
     .tab-btn {
-      padding: 10px 18px;
+      padding: 8px 14px;
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       border-radius: 6px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -146,100 +153,158 @@
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 18px;
-      margin-bottom: 20px;
+      padding: 12px;
+      margin-bottom: 14px;
     }
 
     .card-title {
-      font-size: 1.25rem;
-      margin-bottom: 14px;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
       color: var(--primary);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
-    /* Table Styles */
+    /* Scroll Prompt & Sticky Column Table Styles */
     .table-container {
       overflow-x: auto;
+      position: relative;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--primary);
+      background-color: rgba(56, 189, 248, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    @keyframes horizontalBump {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(12px); }
+      50% { transform: translateX(0); }
+      75% { transform: translateX(8px); }
+      100% { transform: translateX(0); }
+    }
+
+    .bump-animation {
+      animation: horizontalBump 1.2s ease-in-out 2;
     }
 
     #leaderboard-table, .bulletin-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       text-align: left;
-      font-size: 0.95rem;
-      table-layout: fixed;
+      font-size: 0.88rem;
     }
 
     th, td {
-      padding: 10px 8px;
+      padding: 8px 6px;
       border-bottom: 1px solid var(--card-border);
       white-space: nowrap;
     }
 
     th {
-      background-color: rgba(15, 23, 42, 0.7);
+      background-color: #0f172a;
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.4px;
+      font-size: 0.75rem;
+      letter-spacing: 0.3px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
 
-    /* Column Width Allocation */
-    .col-pos { width: 50px; text-align: center; }
-    .col-name { width: 175px; overflow: hidden; text-overflow: ellipsis; font-size: 1rem; }
+    /* Sticky Angler Name & Position Column */
+    .col-pos { 
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      background-color: #1e293b;
+      width: 38px;
+      text-align: center;
+      border-right: 1px solid var(--card-border);
+    }
+
+    th.col-pos { background-color: #0f172a; }
+
+    .col-name { 
+      position: sticky;
+      left: 38px;
+      z-index: 3;
+      background-color: #1e293b;
+      min-width: 140px;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.9rem;
+      border-right: 2px solid var(--card-border);
+    }
+
+    th.col-name { background-color: #0f172a; }
 
     th.leg-header {
-      width: 125px;
+      min-width: 95px;
       text-align: center;
-      padding: 8px 4px;
+      padding: 6px 4px;
     }
 
-    .col-total-len { width: 95px; text-align: center; font-size: 0.95rem; }
-    .col-fish-cnt { width: 75px; text-align: center; font-size: 0.95rem; }
-    .col-best-pts { width: 95px; text-align: center; background-color: rgba(56, 189, 248, 0.15); }
+    .col-total-len { min-width: 80px; text-align: center; font-size: 0.88rem; }
+    .col-fish-cnt { min-width: 65px; text-align: center; font-size: 0.88rem; }
+    .col-best-pts { min-width: 80px; text-align: center; background-color: rgba(56, 189, 248, 0.15); }
 
     .leg-title {
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--text-main);
       display: block;
     }
 
     .leg-venue {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--primary);
       display: block;
-      margin-top: 2px;
+      margin-top: 1px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 118px;
+      max-width: 90px;
     }
 
     .leg-date {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       display: block;
-      margin-top: 2px;
+      margin-top: 1px;
       font-weight: normal;
     }
 
-    tr:hover {
-      background-color: rgba(255, 255, 255, 0.03);
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
     .rank-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       font-weight: 800;
-      font-size: 0.85rem;
+      font-size: 0.78rem;
     }
 
     .rank-1 { background-color: var(--accent-gold); color: #000; }
@@ -249,8 +314,7 @@
     .score-cell {
       text-align: center;
       font-weight: 700;
-      font-size: 1rem;
-      width: 125px;
+      font-size: 0.92rem;
     }
 
     .score-dropped {
@@ -267,26 +331,63 @@
 
     .score-dnf {
       color: var(--danger);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
       opacity: 0.8;
     }
 
     .total-points {
       color: var(--primary);
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 800;
+    }
+
+    /* Podium Cards */
+    .podium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .podium-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .podium-card.gold { border-color: rgba(245, 158, 11, 0.6); }
+    .podium-card.silver { border-color: rgba(203, 213, 225, 0.6); }
+    .podium-card.bronze { border-color: rgba(217, 119, 6, 0.6); }
+
+    .podium-icon {
+      font-size: 1.8rem;
+    }
+
+    .podium-name {
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--text-main);
+    }
+
+    .podium-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
     }
 
     /* Form Styles */
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -295,9 +396,9 @@
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: 6px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     input:focus, select:focus {
@@ -307,21 +408,21 @@
 
     .leg-selector-bar {
       display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 6px;
+      margin-bottom: 12px;
       overflow-x: auto;
-      padding-bottom: 6px;
+      padding-bottom: 4px;
     }
 
     .leg-btn {
-      padding: 8px 14px;
+      padding: 6px 12px;
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       white-space: nowrap;
     }
 
@@ -333,102 +434,84 @@
 
     .roster-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
     }
 
     .roster-card {
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
-      padding: 12px 16px;
+      padding: 10px 12px;
       border-radius: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1rem;
+      font-size: 0.92rem;
     }
 
     .empty-state {
       text-align: center;
-      padding: 30px 16px;
+      padding: 20px 12px;
       color: var(--text-muted);
-    }
-
-    .empty-state h3 {
-      color: var(--text-main);
-      margin-bottom: 6px;
     }
 
     .venue-info-box {
       background-color: rgba(56, 189, 248, 0.05);
       border: 1px solid rgba(56, 189, 248, 0.2);
       border-radius: 6px;
-      padding: 16px;
-      margin-bottom: 18px;
+      padding: 12px;
+      margin-bottom: 14px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
     }
 
     /* Side-by-side Breakdowns Grid */
     .breakdown-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    @media (max-width: 1050px) {
-      .breakdown-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .breakdown-grid {
-        grid-template-columns: 1fr;
-      }
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
     }
 
     .breakdown-card {
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 16px;
+      padding: 12px;
     }
 
     .breakdown-header {
       border-bottom: 1px solid var(--card-border);
-      padding-bottom: 10px;
-      margin-bottom: 12px;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
     }
 
     .breakdown-title {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       color: var(--primary);
     }
 
     .breakdown-sub {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .breakdown-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .breakdown-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.92rem;
-      padding: 8px 10px;
+      font-size: 0.85rem;
+      padding: 6px 8px;
       border-radius: 6px;
       background-color: rgba(255, 255, 255, 0.02);
-      border: 1px solid transparent;
     }
 
     .breakdown-item.first-place {
@@ -446,96 +529,89 @@
     .bulletin-header {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 10px;
     }
 
     .bulletin-title h1 {
       color: var(--primary);
-      font-size: 1.8rem;
+      font-size: 1.4rem;
     }
 
     .bulletin-title p {
       color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 4px;
+      font-size: 0.82rem;
+      margin-top: 2px;
     }
 
     .bulletin-badge {
       background-color: rgba(56, 189, 248, 0.15);
       color: var(--primary);
       border: 1px solid var(--primary);
-      padding: 6px 14px;
+      padding: 4px 12px;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
     .stat-card {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 16px;
+      padding: 10px;
       text-align: center;
     }
 
     .stat-label {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      letter-spacing: 0.4px;
+      margin-bottom: 2px;
     }
 
     .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: var(--primary);
     }
 
-    /* Print Styles */
-    @media print {
-      body {
-        background-color: #fff;
-        color: #000;
-      }
-      .btn, .nav-tabs, header, .no-print, .header-actions {
-        display: none !important;
-      }
-      .card, .stat-card, .bulletin-header {
-        border-color: #ccc;
-        background: none;
-        color: #000;
-      }
-      th, td {
-        border-bottom: 1px solid #ccc;
-        color: #000;
-      }
-      th {
-        background: #f0f0f0;
-      }
-      .score-counted {
-        color: #000;
-      }
-      .score-dropped {
-        color: #888;
-      }
-      #bulletin-view {
-        display: block !important;
-      }
+    .progress-bar-container {
+      width: 100%;
+      background-color: var(--bg-color);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .bulletin-footer {
+      text-align: center;
+      padding: 16px 0 8px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -544,28 +620,25 @@
   <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="handleFileImport(event)">
 
   <div class="container">
-    <!-- ADMIN HEADER (Hidden in Read-Only Link Mode) -->
+    <!-- ADMIN HEADER -->
     <header id="admin-header">
-      <div>
-        <h1>🎣 Fishing League Table</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
-          Best 4 of 6 Matches Count | 1st = 10pts down to 10th+ = 1pt for competing | Blank (0cm/0fish) = 1pt | Unentered = DNF
-        </p>
+      <div class="title-input-group">
+        <span class="league-title-display" id="admin-league-title-display">🎣 Fishing League Table</span>
+        <button class="btn" onclick="promptEditLeagueTitle()" title="Change Competition Name" style="padding: 2px 8px; font-size: 0.75rem;">✏️ Rename</button>
       </div>
       <div class="header-actions no-print">
         <button class="btn btn-primary" onclick="showBulletinView()">📰 Match Bulletin Report</button>
+        <button class="btn" onclick="copyShareableLink()">📋 Copy Shareable Link</button>
         <button class="btn" onclick="exportDataJSON()">📥 Export Data</button>
         <button class="btn" onclick="triggerFileInput()">📤 Import Data</button>
-        <button class="btn btn-danger" onclick="confirmResetNewSeason()">🔄 Reset for New Season</button>
-        <button class="btn" onclick="loadDemoData()">📋 Load Demo Data</button>
-        <button class="btn" onclick="window.print()">🖨 Print Standings</button>
+        <button class="btn btn-danger" onclick="confirmResetNewSeason()">🔄 Reset Season</button>
       </div>
     </header>
 
-    <!-- ADMIN TABS (Hidden in Read-Only Link Mode) -->
+    <!-- ADMIN TABS -->
     <div class="nav-tabs no-print" id="admin-tabs">
       <button class="tab-btn active" onclick="switchTab('leaderboard')">🏆 Overall Standings</button>
-      <button class="tab-btn" onclick="switchTab('breakdown')">📊 Match Breakdown (Side-by-Side)</button>
+      <button class="tab-btn" onclick="switchTab('breakdown')">📊 Match Breakdown</button>
       <button class="tab-btn" onclick="switchTab('match-entry')">📝 Match Results & Venues</button>
       <button class="tab-btn" onclick="switchTab('roster')">👥 Angler Roster</button>
     </div>
@@ -577,18 +650,17 @@
         <div class="card">
           <div class="card-title">
             <span>Overall Club Standings</span>
-            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">* Top 4 leg scores counted (green). Lowest 2 dropped.</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">* Top 4 leg scores count (green)</span>
           </div>
-          <div class="table-container">
+          <div class="scroll-hint">
+            <span>👈 Scroll table horizontally to view all leg scores 👉</span>
+          </div>
+          <div class="table-container" id="admin-table-container">
             <table id="leaderboard-table">
               <thead>
-                <tr id="leaderboard-header-row">
-                  <!-- Dynamically generated headers -->
-                </tr>
+                <tr id="leaderboard-header-row"></tr>
               </thead>
-              <tbody id="leaderboard-body">
-                <!-- Dynamically rendered rows -->
-              </tbody>
+              <tbody id="leaderboard-body"></tbody>
             </table>
           </div>
         </div>
@@ -597,10 +669,8 @@
       <!-- TAB 2: SIDE-BY-SIDE MATCH BREAKDOWN -->
       <div id="tab-breakdown" class="tab-content">
         <div class="card">
-          <div class="card-title">Side-by-Side Leg Comparisons (3 Columns)</div>
-          <div class="breakdown-grid" id="breakdown-grid-container">
-            <!-- Rendered dynamically -->
-          </div>
+          <div class="card-title">Leg-by-Leg Match Results</div>
+          <div class="breakdown-grid" id="breakdown-grid-container"></div>
         </div>
       </div>
 
@@ -608,9 +678,7 @@
       <div id="tab-match-entry" class="tab-content">
         <div class="card">
           <div class="card-title">Select Match Leg</div>
-          <div class="leg-selector-bar" id="leg-selector">
-            <!-- Buttons generated dynamically -->
-          </div>
+          <div class="leg-selector-bar" id="leg-selector"></div>
 
           <div class="venue-info-box">
             <div class="form-group">
@@ -623,21 +691,19 @@
             </div>
           </div>
 
-          <div class="card-title" style="margin-top: 20px;">Match Entries for Selected Leg</div>
+          <div class="card-title" style="margin-top: 14px;">Match Entries for Selected Leg</div>
           <div class="table-container">
-            <table style="width:100%; font-size:0.95rem;">
+            <table style="width:100%; font-size:0.88rem;">
               <thead>
                 <tr>
-                  <th style="font-size:0.85rem;">Angler Name</th>
-                  <th style="font-size:0.85rem;">Total Length (cm)</th>
-                  <th style="font-size:0.85rem;">Fish Count</th>
-                  <th style="font-size:0.85rem;">Match Rank</th>
-                  <th style="font-size:0.85rem;">Points Awarded</th>
+                  <th>Angler Name</th>
+                  <th>Length (cm)</th>
+                  <th>Fish Count</th>
+                  <th>Rank</th>
+                  <th>Points</th>
                 </tr>
               </thead>
-              <tbody id="match-entry-body">
-                <!-- Dynamically populated per match -->
-              </tbody>
+              <tbody id="match-entry-body"></tbody>
             </table>
           </div>
         </div>
@@ -647,39 +713,37 @@
       <div id="tab-roster" class="tab-content">
         <div class="card">
           <div class="card-title">Add New Angler</div>
-          <form id="add-angler-form" onsubmit="handleAddAngler(event)" style="display: flex; gap: 10px; max-width: 450px;">
+          <form id="add-angler-form" onsubmit="handleAddAngler(event)" style="display: flex; gap: 8px; max-width: 400px;">
             <input type="text" id="new-angler-name" placeholder="Enter angler full name..." required style="flex: 1;">
-            <button type="submit" class="btn btn-primary">+ Add Angler</button>
+            <button type="submit" class="btn btn-primary">+ Add</button>
           </form>
         </div>
 
         <div class="card">
           <div class="card-title">Current Angler Roster (<span id="roster-count">0</span>)</div>
-          <div class="roster-grid" id="roster-grid-container">
-            <!-- Dynamically populated angler cards -->
-          </div>
+          <div class="roster-grid" id="roster-grid-container"></div>
         </div>
       </div>
     </div>
 
-    <!-- READ-ONLY MATCH BULLETIN VIEW -->
+    <!-- READ-ONLY MATCH BULLETIN VIEW (COMPETITOR VIEW) -->
     <div id="bulletin-view">
-      <div class="no-print" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div class="no-print" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
         <button class="btn" id="btn-back-admin" onclick="hideBulletinView()" style="display:none;">🔙 Back to Admin Dashboard</button>
-        <div style="display: flex; gap: 10px; margin-left: auto;">
-          <button class="btn btn-primary" onclick="copyShareableLink()">📋 Copy Shareable Web Link</button>
-          <button class="btn" onclick="window.print()">🖨 Save PDF / Print</button>
-        </div>
       </div>
 
       <div class="bulletin-header">
         <div class="bulletin-title">
-          <h1>🎣 Club Fishing League - Official Bulletin</h1>
-          <p>Season Standings & Competition Report | Updated Live</p>
+          <h1 id="bulletin-league-title">🎣 Club Fishing League</h1>
+          <p>Official Season Standings & Competition Bulletin</p>
         </div>
         <div class="bulletin-badge" id="bulletin-progress-badge">0 of 6 Legs Completed</div>
       </div>
 
+      <!-- TOP 3 PODIUM SHOWCASE -->
+      <div class="podium-grid" id="podium-container"></div>
+
+      <!-- SEASON STATS -->
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">League Leader</div>
@@ -694,7 +758,7 @@
           <div class="stat-value" id="stat-total-length">0 cm</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Most Recent Winner</div>
+          <div class="stat-label">Recent Winner</div>
           <div class="stat-value" id="stat-recent-winner" style="color: var(--success);">-</div>
         </div>
       </div>
@@ -702,9 +766,12 @@
       <div class="card">
         <div class="card-title">
           <span>Official Season Standings</span>
-          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:normal;">* Best 4 out of 6 leg scores count</span>
+          <span style="font-size:0.78rem; color:var(--text-muted); font-weight:normal;">* Best 4 out of 6 leg scores count</span>
         </div>
-        <div class="table-container">
+        <div class="scroll-hint">
+          <span>👈 Swipe table left/right to view all 6 leg scores 👉</span>
+        </div>
+        <div class="table-container" id="bulletin-table-container">
           <table class="bulletin-table" id="bulletin-table">
             <thead>
               <tr id="bulletin-header-row"></tr>
@@ -718,12 +785,17 @@
         <div class="card-title">Completed Match Summaries</div>
         <div class="breakdown-grid" id="bulletin-breakdown-container"></div>
       </div>
+
+      <div class="bulletin-footer">
+        <p id="bulletin-last-updated">Official League Bulletin • Updated Live</p>
+      </div>
     </div>
   </div>
 
   <script>
     // BASELINE DEFAULT DATA
     const DEFAULT_DATA = {
+      "title": "Club Fishing League Table",
       "anglers": [
         { "id": "a_1791227057506", "name": "Stewart Crilly" },
         { "id": "a_1791227066733", "name": "Stewart P" },
@@ -787,6 +859,7 @@
     ];
 
     let appData = {
+      title: "Club Fishing League Table",
       anglers: [],
       legs: JSON.parse(JSON.stringify(DEFAULT_LEGS)),
       results: {},
@@ -794,6 +867,16 @@
     };
 
     let isPublicView = false;
+
+    // RENAME COMPETITION LEAGUE TITLE
+    function promptEditLeagueTitle() {
+      const currentTitle = appData.title || "Club Fishing League Table";
+      const newTitle = prompt("Enter Competition Name:", currentTitle);
+      if (newTitle && newTitle.trim()) {
+        appData.title = newTitle.trim();
+        saveData();
+      }
+    }
 
     // CHECK URL FOR ENCODED DATA & SHAREABLE BULLETIN MODE
     function checkURLViewMode() {
@@ -819,23 +902,53 @@
         document.getElementById('admin-content').style.display = 'none';
         document.getElementById('bulletin-view').style.display = 'block';
         document.getElementById('btn-back-admin').style.display = 'none';
+        triggerHorizontalBump('bulletin-table-container');
       }
     }
 
+    // COPY SHORT SHAREABLE LINK VIA IS.GD SHORTENER
     function copyShareableLink() {
       const baseURL = window.location.href.split('?')[0];
       const jsonStr = JSON.stringify(appData);
       const compressed = LZString.compressToEncodedURIComponent(jsonStr);
-      const shareURL = `${baseURL}?data=${compressed}&view=bulletin`;
+      const fullLongURL = `${baseURL}?data=${compressed}&view=bulletin`;
 
-      navigator.clipboard.writeText(shareURL).then(() => {
-        alert("📋 Shareable Web Link copied to clipboard!\n\nThis link contains all your latest scores. You can paste it straight into WhatsApp for your members.");
-      }).catch(err => {
-        prompt("Copy this link to share with competitors:", shareURL);
+      const apiURL = `https://is.gd/create.php?format=json&url=${encodeURIComponent(fullLongURL)}`;
+
+      fetch(apiURL)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.shorturl) {
+            navigator.clipboard.writeText(data.shorturl);
+            alert(`📋 Short Link Copied!\n\n${data.shorturl}\n\nYou can now paste this straight into WhatsApp.`);
+          } else {
+            fallbackCopyURL(fullLongURL);
+          }
+        })
+        .catch(err => {
+          fallbackCopyURL(fullLongURL);
+        });
+    }
+
+    function fallbackCopyURL(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert("📋 Shareable Link copied to clipboard!");
+      }).catch(() => {
+        prompt("Copy this link to share:", url);
       });
     }
 
-    // LOCAL STORAGE MANAGEMENT WITH DEFAULT_DATA FALLBACK
+    function triggerHorizontalBump(containerId) {
+      setTimeout(() => {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.classList.add('bump-animation');
+          setTimeout(() => el.classList.remove('bump-animation'), 2500);
+        }
+      }, 300);
+    }
+
+    // LOCAL STORAGE MANAGEMENT
     function loadData() {
       const saved = localStorage.getItem('fishing_league_data');
       if (saved) {
@@ -856,13 +969,13 @@
 
     // RESET FOR NEW SEASON
     function confirmResetNewSeason() {
-      if (confirm("End Season & Reset?\n\nThis will export a backup of the current season and clear match results so you can start a fresh competition year with your angler roster intact.")) {
+      if (confirm("End Season & Reset?\n\nThis will download a backup JSON file of the current season and reset match results for next year.")) {
         exportDataJSON();
         appData.results = {};
         appData.legs = JSON.parse(JSON.stringify(DEFAULT_LEGS));
         appData.currentSelectedLeg = 1;
         saveData();
-        alert("✅ Season reset! A backup JSON of the previous season was downloaded to your computer.");
+        alert("✅ Season reset! A backup file of previous results was downloaded.");
       }
     }
 
@@ -890,16 +1003,16 @@
         try {
           const importedData = JSON.parse(e.target.result);
           if (importedData && Array.isArray(importedData.anglers) && Array.isArray(importedData.legs)) {
-            if (confirm("Importing this file will replace your current league data. Proceed?")) {
+            if (confirm("Importing this file will replace current data. Proceed?")) {
               appData = importedData;
               saveData();
               alert("✅ Data successfully imported!");
             }
           } else {
-            alert("❌ Invalid data file format. Please upload a valid Fishing League backup file.");
+            alert("❌ Invalid backup file format.");
           }
         } catch (err) {
-          alert("❌ Error reading data file. Ensure it is a valid JSON backup.");
+          alert("❌ Error reading data file.");
         }
       };
       reader.readAsText(file);
@@ -912,6 +1025,7 @@
       document.getElementById('bulletin-view').style.display = 'block';
       document.getElementById('btn-back-admin').style.display = 'inline-flex';
       renderBulletinView();
+      triggerHorizontalBump('bulletin-table-container');
     }
 
     function hideBulletinView() {
@@ -919,63 +1033,6 @@
       document.getElementById('admin-header').style.display = 'flex';
       document.getElementById('admin-tabs').style.display = 'flex';
       document.getElementById('admin-content').style.display = 'block';
-    }
-
-    // DEMO DATA GENERATOR
-    function loadDemoData() {
-      if (confirm("Loading demo data will overwrite your current table. Proceed?")) {
-        const demoAnglers = [
-          "John Smith", "David Miller", "Chris Mccreadie", "Alex Thomson",
-          "Mark Wilson", "James Robertson", "Paul Brown", "Robert Taylor",
-          "Gary Anderson", "Steven Clark", "Craig Campbell", "Michael Stewart",
-          "Andy Power", "Robbie Taylor"
-        ].map((name, idx) => ({ id: 'a_' + (idx + 1), name }));
-
-        const demoLegs = [
-          { id: 1, venue: 'Whitby Pier', date: '2026-05-10' },
-          { id: 2, venue: 'Loch Awe', date: '2026-06-01' },
-          { id: 3, venue: 'Berwick Shore', date: '2026-06-22' },
-          { id: 4, venue: 'Cairnryan', date: '2026-07-15' },
-          { id: 5, venue: 'Eyemouth', date: '2026-08-08' },
-          { id: 6, venue: 'Kintyre', date: '2026-09-02' }
-        ];
-
-        const demoResults = {};
-        demoAnglers.forEach(a => {
-          demoLegs.forEach(l => {
-            const rand = Math.random();
-            if (rand < 0.15) {
-              // DNF
-            } else if (rand < 0.25) {
-              demoResults[`${a.id}_leg_${l.id}`] = { length: 0, count: 0 };
-            } else {
-              const length = Math.floor(Math.random() * 200) + 20;
-              const count = Math.floor(length / 25) + 1;
-              demoResults[`${a.id}_leg_${l.id}`] = { length, count };
-            }
-          });
-        });
-
-        appData = {
-          anglers: demoAnglers,
-          legs: demoLegs,
-          results: demoResults,
-          currentSelectedLeg: 1
-        };
-        saveData();
-      }
-    }
-
-    function confirmStartFresh() {
-      if (confirm("Are you sure you want to clear all anglers, venues, and results to start fresh?")) {
-        appData = {
-          anglers: [],
-          legs: JSON.parse(JSON.stringify(DEFAULT_LEGS)),
-          results: {},
-          currentSelectedLeg: 1
-        };
-        saveData();
-      }
     }
 
     // TAB SWITCHING
@@ -1111,6 +1168,10 @@
 
     // RENDER FUNCTIONS
     function renderApp() {
+      const titleText = appData.title || "Club Fishing League Table";
+      document.getElementById('admin-league-title-display').innerText = `🎣 ${titleText}`;
+      document.getElementById('bulletin-league-title').innerText = `🎣 ${titleText}`;
+
       renderLeaderboard();
       renderBreakdown();
       renderLegSelector();
@@ -1124,7 +1185,7 @@
       const body = document.getElementById('leaderboard-body');
 
       let headerHTML = `
-        <th class="col-pos">Pos</th>
+        <th class="col-pos">#</th>
         <th class="col-name">Angler Name</th>
       `;
 
@@ -1143,7 +1204,7 @@
       headerHTML += `
         <th class="col-total-len">Total Len</th>
         <th class="col-fish-cnt">Fish</th>
-        <th class="col-best-pts">Best 4 Pts</th>
+        <th class="col-best-pts">Best 4</th>
       `;
       headerRow.innerHTML = headerHTML;
 
@@ -1154,7 +1215,6 @@
           <tr>
             <td colspan="11" class="empty-state">
               <h3>No Anglers in Roster</h3>
-              <p>Go to the "Angler Roster" tab to add your club members.</p>
             </td>
           </tr>
         `;
@@ -1170,7 +1230,7 @@
 
         const rankDisplay = rankBadgeClass 
           ? `<span class="rank-badge ${rankBadgeClass}">${rank}</span>` 
-          : `<span style="font-weight:700; color:var(--text-muted); font-size:1rem;">${rank}</span>`;
+          : `<span style="font-weight:700; color:var(--text-muted); font-size:0.85rem;">${rank}</span>`;
 
         let legsCellsHTML = '';
         item.legScores.forEach(score => {
@@ -1180,14 +1240,10 @@
           if (score.status === 'DNF') {
             scoreDisplay = `<span class="score-dnf">DNF</span>`;
           } else {
-            scoreDisplay = `${score.points} <span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">pt</span>`;
+            scoreDisplay = `${score.points} <span style="font-size:0.7rem; font-weight:normal; opacity:0.8;">pt</span>`;
           }
 
-          legsCellsHTML += `
-            <td class="score-cell ${cls}">
-              ${scoreDisplay}
-            </td>
-          `;
+          legsCellsHTML += `<td class="score-cell ${cls}">${scoreDisplay}</td>`;
         });
 
         return `
@@ -1207,12 +1263,7 @@
       const container = document.getElementById('breakdown-grid-container');
 
       if (appData.anglers.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1;" class="empty-state">
-            <h3>No Anglers in Roster</h3>
-            <p>Add anglers in the Roster tab to see match breakdowns.</p>
-          </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><h3>No Anglers in Roster</h3></div>`;
         return;
       }
 
@@ -1250,15 +1301,15 @@
           if (status === 'DNF') {
             scoreMeta = `<span class="score-dnf">DNF</span>`;
           } else if (status === 'BLANK') {
-            scoreMeta = `<span style="color:var(--accent-gold); font-size:0.85rem; font-weight:700;">Blank (1 pt)</span>`;
+            scoreMeta = `<span style="color:var(--accent-gold); font-size:0.8rem; font-weight:700;">Blank (1 pt)</span>`;
           } else {
-            scoreMeta = `<span style="color:var(--text-muted); font-size:0.88rem;">${res.length || 0}cm / ${res.count || 0}f → <strong style="color:var(--primary); font-size:0.95rem;">${pts}pts</strong></span>`;
+            scoreMeta = `<span style="color:var(--text-muted); font-size:0.8rem;">${res.length || 0}cm / ${res.count || 0}f → <strong style="color:var(--primary); font-size:0.88rem;">${pts}pts</strong></span>`;
           }
 
           return `
             <div class="breakdown-item ${isWinner ? 'first-place' : ''}">
-              <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
-                <span style="font-weight:bold; font-size:0.88rem; color:var(--text-muted); width:22px;">${rank !== '-' ? '#' + rank : '-'}</span>
+              <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+                <span style="font-weight:bold; font-size:0.8rem; color:var(--text-muted); width:18px;">${rank !== '-' ? '#' + rank : '-'}</span>
                 <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700;">${badge} ${escapeHTML(angler.name)}</span>
               </div>
               <div>${scoreMeta}</div>
@@ -1272,9 +1323,7 @@
               <div class="breakdown-title">Leg ${leg.id}: ${escapeHTML(venueText)}</div>
               <div class="breakdown-sub">${dateText}</div>
             </div>
-            <div class="breakdown-list">
-              ${listItems}
-            </div>
+            <div class="breakdown-list">${listItems}</div>
           </div>
         `;
       }).join('');
@@ -1305,6 +1354,36 @@
         totalLength += item.totalLengthAll;
       });
 
+      // Render Podium Top 3 Cards
+      const podiumContainer = document.getElementById('podium-container');
+      if (standings.length >= 3) {
+        podiumContainer.innerHTML = `
+          <div class="podium-card gold">
+            <div class="podium-icon">🥇</div>
+            <div>
+              <div class="podium-name">${escapeHTML(standings[0].angler.name)}</div>
+              <div class="podium-sub">1st Place • ${standings[0].best4Points} pts (${standings[0].totalLengthAll} cm)</div>
+            </div>
+          </div>
+          <div class="podium-card silver">
+            <div class="podium-icon">🥈</div>
+            <div>
+              <div class="podium-name">${escapeHTML(standings[1].angler.name)}</div>
+              <div class="podium-sub">2nd Place • ${standings[1].best4Points} pts (${standings[1].totalLengthAll} cm)</div>
+            </div>
+          </div>
+          <div class="podium-card bronze">
+            <div class="podium-icon">🥉</div>
+            <div>
+              <div class="podium-name">${escapeHTML(standings[2].angler.name)}</div>
+              <div class="podium-sub">3rd Place • ${standings[2].best4Points} pts (${standings[2].totalLengthAll} cm)</div>
+            </div>
+          </div>
+        `;
+      } else {
+        podiumContainer.innerHTML = '';
+      }
+
       document.getElementById('bulletin-progress-badge').innerText = `${completedLegsCount} of 6 Legs Completed`;
       document.getElementById('stat-leader-name').innerText = standings.length > 0 ? standings[0].angler.name : '-';
       document.getElementById('stat-total-fish').innerText = `${totalFish} Fish`;
@@ -1314,6 +1393,9 @@
       document.getElementById('bulletin-header-row').innerHTML = document.getElementById('leaderboard-header-row').innerHTML;
       document.getElementById('bulletin-body').innerHTML = document.getElementById('leaderboard-body').innerHTML;
       document.getElementById('bulletin-breakdown-container').innerHTML = document.getElementById('breakdown-grid-container').innerHTML;
+      
+      const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      document.getElementById('bulletin-last-updated').innerText = `Official Competition Bulletin • Updated ${today}`;
     }
 
     function renderLegSelector() {
@@ -1355,14 +1437,7 @@
       const legId = appData.currentSelectedLeg;
 
       if (appData.anglers.length === 0) {
-        body.innerHTML = `
-          <tr>
-            <td colspan="5" class="empty-state">
-              <h3>No Anglers Found</h3>
-              <p>Please add anglers in the Roster tab first.</p>
-            </td>
-          </tr>
-        `;
+        body.innerHTML = `<tr><td colspan="5" class="empty-state"><h3>No Anglers Found</h3></td></tr>`;
         return;
       }
 
@@ -1386,19 +1461,19 @@
 
         return `
           <tr>
-            <td style="font-weight: 700; font-size:1rem;">${escapeHTML(angler.name)}</td>
+            <td style="font-weight: 700;">${escapeHTML(angler.name)}</td>
             <td>
               <input type="number" min="0" placeholder="DNF" value="${res.length !== undefined && res.length !== null ? res.length : ''}" 
-                style="width: 110px; font-weight:600;"
+                style="width: 85px; font-weight:600;"
                 onchange="updateScore('${angler.id}', ${legId}, 'length', this.value)"> cm
             </td>
             <td>
               <input type="number" min="0" placeholder="DNF" value="${res.count !== undefined && res.count !== null ? res.count : ''}" 
-                style="width: 90px; font-weight:600;"
+                style="width: 75px; font-weight:600;"
                 onchange="updateScore('${angler.id}', ${legId}, 'count', this.value)">
             </td>
-            <td><span style="font-weight:700; color:var(--text-muted); font-size:1rem;">${rank !== '-' ? '#' + rank : '-'}</span></td>
-            <td style="font-size:1.05rem;">${pointsText}</td>
+            <td><span style="font-weight:700; color:var(--text-muted);">${rank !== '-' ? '#' + rank : '-'}</span></td>
+            <td>${pointsText}</td>
           </tr>
         `;
       }).join('');
@@ -1428,19 +1503,14 @@
       document.getElementById('roster-count').innerText = appData.anglers.length;
 
       if (appData.anglers.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1;" class="empty-state">
-            <h3>Roster is Empty</h3>
-            <p>Add your club anglers using the form above.</p>
-          </div>
-        `;
+        grid.innerHTML = `<div class="empty-state"><h3>Roster is Empty</h3></div>`;
         return;
       }
 
       grid.innerHTML = appData.anglers.map(angler => `
         <div class="roster-card">
           <span style="font-weight: 700;">${escapeHTML(angler.name)}</span>
-          <button class="btn btn-danger" style="padding: 4px 10px; font-size:0.85rem;" onclick="removeAngler('${angler.id}')">Remove</button>
+          <button class="btn btn-danger" style="padding: 2px 8px; font-size:0.75rem;" onclick="removeAngler('${angler.id}')">Remove</button>
         </div>
       `).join('');
     }
@@ -1458,7 +1528,7 @@
     }
 
     function removeAngler(id) {
-      if (confirm("Are you sure? Removing an angler deletes all their logged match results.")) {
+      if (confirm("Remove angler? Deletes all logged match scores.")) {
         appData.anglers = appData.anglers.filter(a => a.id !== id);
         Object.keys(appData.results).forEach(key => {
           if (key.startsWith(`${id}_`)) {
