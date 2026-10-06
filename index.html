@@ -554,7 +554,7 @@
         <button class="btn btn-primary" onclick="showBulletinView()">📰 Match Bulletin Report</button>
         <button class="btn" onclick="exportDataJSON()">📥 Export Data</button>
         <button class="btn" onclick="triggerFileInput()">📤 Import Data</button>
-        <button class="btn btn-danger" onclick="confirmStartFresh()">🗑 Clear / Start Fresh</button>
+        <button class="btn btn-danger" onclick="confirmResetNewSeason()">🔄 Reset for New Season</button>
         <button class="btn" onclick="loadDemoData()">📋 Load Demo Data</button>
         <button class="btn" onclick="window.print()">🖨 Print Standings</button>
       </div>
@@ -720,7 +720,61 @@
   </div>
 
   <script>
-    // INITIAL APP STATE
+    // YOUR LIVE SEASON DATA (INCORPORATED)
+    const DEFAULT_DATA = {
+      "anglers": [
+        { "id": "a_1791227057506", "name": "Stewart Crilly" },
+        { "id": "a_1791227066733", "name": "Stewart P" },
+        { "id": "a_1791227082728", "name": "Danny Connor" },
+        { "id": "a_1791227096165", "name": "Chris McCreadie" },
+        { "id": "a_1791227105830", "name": "Willie Shaw" },
+        { "id": "a_1791227117551", "name": "Ian Elliot" },
+        { "id": "a_1791227137167", "name": "Andy Haswell" },
+        { "id": "a_1791227179965", "name": "Kenny Speirs" },
+        { "id": "a_1791227190301", "name": "Dave Hearsay" },
+        { "id": "a_1791227198169", "name": "Willie Brandon" },
+        { "id": "a_1791227205491", "name": "Barry Gilbert" },
+        { "id": "a_1791303310294", "name": "Gerry c" },
+        { "id": "a_1791303322494", "name": "Gerry McNeil" }
+      ],
+      "legs": [
+        { "id": 1, "venue": "Elliot Beach", "date": "2026-05-24" },
+        { "id": 2, "venue": "Carsthorne", "date": "2026-06-18" },
+        { "id": 3, "venue": "Cairndow", "date": "2026-07-20" },
+        { "id": 4, "venue": "Erskine Walkway", "date": "2026-09-06" },
+        { "id": 5, "venue": "Ardrossan Beach", "date": "2026-10-03" },
+        { "id": 6, "venue": "", "date": "" }
+      ],
+      "results": {
+        "a_1791227057506_leg_1": { "length": 350, "count": 19 },
+        "a_1791227066733_leg_1": { "length": 318, "count": 17 },
+        "a_1791227082728_leg_1": { "length": 194, "count": 10 },
+        "a_1791227096165_leg_1": { "length": 127, "count": 7 },
+        "a_1791227105830_leg_1": { "length": 116, "count": 6 },
+        "a_1791227117551_leg_1": { "length": 114, "count": 6 },
+        "a_1791227137167_leg_1": { "length": 89, "count": 4 },
+        "a_1791227179965_leg_1": { "length": 60, "count": 4 },
+        "a_1791227057506_leg_2": { "length": 0, "count": 0 },
+        "a_1791227096165_leg_2": { "length": 0, "count": 0 },
+        "a_1791227105830_leg_2": { "length": 84, "count": 2 },
+        "a_1791227096165_leg_3": { "length": 133, "count": 3 },
+        "a_1791227105830_leg_3": { "length": 320, "count": 7 },
+        "a_1791227117551_leg_3": { "length": 17, "count": 1 },
+        "a_1791227205491_leg_3": { "length": 0, "count": 0 },
+        "a_1791227082728_leg_4": { "length": 47, "count": 2 },
+        "a_1791227096165_leg_4": { "length": 45, "count": 2 },
+        "a_1791227105830_leg_4": { "length": 88, "count": 5 },
+        "a_1791227117551_leg_4": { "length": 0, "count": 0 },
+        "a_1791227205491_leg_4": { "length": 16, "count": 1 },
+        "a_1791227057506_leg_5": { "length": 54, "count": 3 },
+        "a_1791227082728_leg_5": { "length": 78, "count": 3 },
+        "a_1791227117551_leg_5": { "length": 56, "count": 2 },
+        "a_1791227105830_leg_5": { "length": 84, "count": 4 },
+        "a_1791227205491_leg_5": { "length": 0, "count": 0 }
+      },
+      "currentSelectedLeg": 5
+    };
+
     const DEFAULT_LEGS = [
       { id: 1, venue: '', date: '' },
       { id: 2, venue: '', date: '' },
@@ -738,6 +792,37 @@
     };
 
     let isPublicView = false;
+
+    // LOCAL STORAGE MANAGEMENT WITH DEFAULT_DATA FALLBACK
+    function loadData() {
+      const saved = localStorage.getItem('fishing_league_data');
+      if (saved) {
+        try {
+          appData = JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse local storage", e);
+        }
+      } else if (DEFAULT_DATA) {
+        appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem('fishing_league_data', JSON.stringify(appData));
+      renderApp();
+    }
+
+    // RESET FOR NEW SEASON
+    function confirmResetNewSeason() {
+      if (confirm("End Season & Reset?\n\nThis will export a backup of the current season and clear match results so you can start a fresh competition year with your angler roster intact.")) {
+        exportDataJSON(); // Automatically download backup first for safety
+        appData.results = {};
+        appData.legs = JSON.parse(JSON.stringify(DEFAULT_LEGS));
+        appData.currentSelectedLeg = 1;
+        saveData();
+        alert("✅ Season reset! A backup JSON of the previous season was downloaded to your computer.");
+      }
+    }
 
     // DATA EXPORT & IMPORT FUNCTIONS
     function exportDataJSON() {
@@ -815,23 +900,6 @@
       }).catch(err => {
         prompt("Copy this link to share with competitors:", shareURL);
       });
-    }
-
-    // LOCAL STORAGE MANAGEMENT
-    function loadData() {
-      const saved = localStorage.getItem('fishing_league_data');
-      if (saved) {
-        try {
-          appData = JSON.parse(saved);
-        } catch (e) {
-          console.error("Failed to parse local storage", e);
-        }
-      }
-    }
-
-    function saveData() {
-      localStorage.setItem('fishing_league_data', JSON.stringify(appData));
-      renderApp();
     }
 
     // DEMO DATA GENERATOR
