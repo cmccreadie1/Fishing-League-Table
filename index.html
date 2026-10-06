@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Fishing League Table</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent-gold: #f59e0b;
+      --accent-silver: #94a3b8;
+      --accent-bronze: #d97706;
+      --dropped-color: #64748b;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 16px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background-color: var(--card-border);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #0f172a;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      color: #fff;
+    }
+
+    .btn-danger {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background-color: var(--card-bg);
+      color: var(--primary);
+      border: 1px solid var(--card-border);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Table Styles - Fixed Layout to Prevent Squashing */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    #leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+      table-layout: fixed;
+    }
+
+    th, td {
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--card-border);
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: rgba(15, 23, 42, 0.6);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* Column Width Allocation */
+    .col-pos { width: 44px; text-align: center; }
+    .col-name { width: 160px; overflow: hidden; text-overflow: ellipsis; }
+
+    th.leg-header {
+      width: 100px;
+      text-align: center;
+      padding: 6px 4px;
+    }
+
+    .col-total-len { width: 90px; text-align: center; }
+    .col-fish-cnt { width: 70px; text-align: center; }
+    .col-best-pts { width: 90px; text-align: center; background-color: rgba(56, 189, 248, 0.15); }
+
+    .leg-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+    }
+
+    .leg-venue {
+      font-size: 0.7rem;
+      color: var(--primary);
+      display: block;
+      margin-top: 1px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 92px;
+    }
+
+    .leg-date {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 1px;
+      font-weight: normal;
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+
+    .rank-1 { background-color: var(--accent-gold); color: #000; }
+    .rank-2 { background-color: var(--accent-silver); color: #000; }
+    .rank-3 { background-color: var(--accent-bronze); color: #fff; }
+
+    .score-cell {
+      text-align: center;
+      font-weight: 600;
+      width: 100px;
+    }
+
+    .score-dropped {
+      color: var(--dropped-color);
+      text-decoration: line-through;
+      font-weight: normal;
+      opacity: 0.6;
+    }
+
+    .score-counted {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .score-dnf {
+      color: var(--danger);
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    .total-points {
+      color: var(--primary);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    /* Form Styles */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    input, select {
+      background-color: var(--bg-color);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .leg-selector-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .leg-btn {
+      padding: 6px 12px;
+      background-color: var(--bg-color);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .leg-btn.active {
+      background-color: var(--primary);
+      color: #0f172a;
+      border-color: var(--primary);
+    }
+
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .roster-card {
+      background-color: var(--bg-color);
+      border: 1px solid var(--card-border);
+      padding: 10px 14px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 16px;
+      color: var(--text-muted);
+    }
+
+    .empty-state h3 {
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .venue-info-box {
+      background-color: rgba(56, 189, 248, 0.05);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    /* Side-by-side Breakdowns Grid */
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 1050px) {
+      .breakdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .breakdown-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .breakdown-card {
+      background-color: var(--bg-color);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .breakdown-header {
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .breakdown-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+
+    .breakdown-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
+    }
+
+    .breakdown-item.first-place {
+      background-color: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: #fff;
+        color: #000;
+      }
+      .btn, .nav-tabs, header p, .no-print {
+        display: none !important;
+      }
+      .card {
+        border: none;
+        background: none;
+        padding: 0;
+      }
+      th, td {
+        border-bottom: 1px solid #ccc;
+        color: #000;
+      }
+      th {
+        background: #f0f0f0;
+      }
+      .score-counted {
+        color: #000;
+      }
+      .score-dropped {
+        color: #888;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>🎣 Fishing League Table</h1>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+          Best 4 of 6 Matches Count | 1st = 10pts down to 10th+ = 1pt for competing | Blank (0cm/0fish) = 1pt | Unentered = DNF
+        </p>
+      </div>
+      <div class="header-actions no-print">
+        <button class="btn btn-danger" onclick="confirmStartFresh()">🗑️ Clear / Start Fresh</button>
+        <button class="btn" onclick="loadDemoData()">📋 Load Demo Data</button>
+        <button class="btn" onclick="window.print()">🖨 Print Standings</button>
+      </div>
+    </header>
+
+    <div class="nav-tabs no-print">
+      <button class="tab-btn active" onclick="switchTab('leaderboard')">🏆 Overall Standings</button>
+      <button class="tab-btn" onclick="switchTab('breakdown')">📊 Match Breakdown (Side-by-Side)</button>
+      <button class="tab-btn" onclick="switchTab('match-entry')">📝 Match Results & Venues</button>
+      <button class="tab-btn" onclick="switchTab('roster')">👥 Angler Roster</button>
+    </div>
+
+    <!-- TAB 1: OVERALL LEADERBOARD -->
+    <div id="tab-leaderboard" class="tab-content active">
+      <div class="card">
+        <div class="card-title">
+          <span>Overall Club Standings</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">* Top 4 leg scores counted (green). Lowest 2 dropped.</span>
+        </div>
+        <div class="table-container">
+          <table id="leaderboard-table">
+            <thead>
+              <tr id="leaderboard-header-row">
+                <!-- Dynamically generated headers -->
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <!-- Dynamically rendered rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: SIDE-BY-SIDE MATCH BREAKDOWN -->
+    <div id="tab-breakdown" class="tab-content">
+      <div class="card">
+        <div class="card-title">Side-by-Side Leg Comparisons (3 Columns)</div>
+        <div class="breakdown-grid" id="breakdown-grid-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MATCH RESULTS & VENUE ENTRY -->
+    <div id="tab-match-entry" class="tab-content">
+      <div class="card">
+        <div class="card-title">Select Match Leg</div>
+        <div class="leg-selector-bar" id="leg-selector">
+          <!-- Buttons generated dynamically -->
+        </div>
+
+        <div class="venue-info-box">
+          <div class="form-group">
+            <label for="venue-name">Venue / Location Name</label>
+            <input type="text" id="venue-name" placeholder="e.g. Whitby Pier, Loch Awe..." onchange="saveLegVenueInfo()">
+          </div>
+          <div class="form-group">
+            <label for="venue-date">Match Date</label>
+            <input type="date" id="venue-date" onchange="saveLegVenueInfo()">
+          </div>
+        </div>
+
+        <div class="card-title" style="margin-top: 20px;">Match Entries for Selected Leg</div>
+        <div class="table-container">
+          <table style="width:100%;">
+            <thead>
+              <tr>
+                <th>Angler Name</th>
+                <th>Total Length (cm)</th>
+                <th>Fish Count</th>
+                <th>Match Rank</th>
+                <th>Points Awarded</th>
+              </tr>
+            </thead>
+            <tbody id="match-entry-body">
+              <!-- Dynamically populated per match -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ROSTER MANAGEMENT -->
+    <div id="tab-roster" class="tab-content">
+      <div class="card">
+        <div class="card-title">Add New Angler</div>
+        <form id="add-angler-form" onsubmit="handleAddAngler(event)" style="display: flex; gap: 10px; max-width: 450px;">
+          <input type="text" id="new-angler-name" placeholder="Enter angler full name..." required style="flex: 1;">
+          <button type="submit" class="btn btn-primary">+ Add Angler</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Current Angler Roster (<span id="roster-count">0</span>)</div>
+        <div class="roster-grid" id="roster-grid-container">
+          <!-- Dynamically populated angler cards -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // INITIAL APP STATE
+    const DEFAULT_LEGS = [
+      { id: 1, venue: '', date: '' },
+      { id: 2, venue: '', date: '' },
+      { id: 3, venue: '', date: '' },
+      { id: 4, venue: '', date: '' },
+      { id: 5, venue: '', date: '' },
+      { id: 6, venue: '', date: '' }
+    ];
+
+    let appData = {
+      anglers: [],
+      legs: JSON.parse(JSON.stringify(DEFAULT_LEGS)),
+      results: {},
+      currentSelectedLeg: 1
+    };
+
+    // LOCAL STORAGE MANAGEMENT
+    function loadData() {
+      const saved = localStorage.getItem('fishing_league_data');
+      if (saved) {
+        try {
+          appData = JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse local storage", e);
+        }
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem('fishing_league_data', JSON.stringify(appData));
+      renderApp();
+    }
+
+    // DEMO DATA GENERATOR
+    function loadDemoData() {
+      if (confirm("Loading demo data will overwrite your current table. Proceed?")) {
+        const demoAnglers = [
+          "John Smith", "David Miller", "Chris Mccreadie", "Alex Thomson",
+          "Mark Wilson", "James Robertson", "Paul Brown", "Robert Taylor",
+          "Gary Anderson", "Steven Clark", "Craig Campbell", "Michael Stewart",
+          "Andy Power", "Robbie Taylor"
+        ].map((name, idx) => ({ id: 'a_' + (idx + 1), name }));
+
+        const demoLegs = [
+          { id: 1, venue: 'Whitby Pier', date: '2026-05-10' },
+          { id: 2, venue: 'Loch Awe', date: '2026-06-01' },
+          { id: 3, venue: 'Berwick Shore', date: '2026-06-22' },
+          { id: 4, venue: 'Cairnryan', date: '2026-07-15' },
+          { id: 5, venue: 'Eyemouth', date: '2026-08-08' },
+          { id: 6, venue: 'Kintyre', date: '2026-09-02' }
+        ];
+
+        const demoResults = {};
+        demoAnglers.forEach(a => {
+          demoLegs.forEach(l => {
+            const rand = Math.random();
+            if (rand < 0.15) {
+              // DNF
+            } else if (rand < 0.25) {
+              demoResults[`${a.id}_leg_${l.id}`] = { length: 0, count: 0 };
+            } else {
+              const length = Math.floor(Math.random() * 200) + 20;
+              const count = Math.floor(length / 25) + 1;
+              demoResults[`${a.id}_leg_${l.id}`] = { length, count };
+            }
+          });
+        });
+
+        appData = {
+          anglers: demoAnglers,
+          legs: demoLegs,
+          results: demoResults,
+          currentSelectedLeg: 1
+        };
+        saveData();
+      }
+    }
+
+    function confirmStartFresh() {
+      if (confirm("Are you sure you want to clear all anglers, venues, and results to start fresh?")) {
+        appData = {
+          anglers: [],
+          legs: JSON.parse(JSON.stringify(DEFAULT_LEGS)),
+          results: {},
+          currentSelectedLeg: 1
+        };
+        saveData();
+      }
+    }
+
+    // TAB SWITCHING
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+
+    // SCORE & LEAGUE COMPUTATION LOGIC
+    function calculateLegPoints(legId) {
+      const entries = [];
+
+      appData.anglers.forEach(angler => {
+        const key = `${angler.id}_leg_${legId}`;
+        const res = appData.results[key];
+        
+        if (res !== undefined && res !== null && res.length !== '' && res.length !== null) {
+          entries.push({
+            anglerId: angler.id,
+            length: Number(res.length) || 0,
+            count: Number(res.count) || 0,
+            hasRecord: true
+          });
+        }
+      });
+
+      entries.sort((a, b) => {
+        if (b.length !== a.length) return b.length - a.length;
+        return b.count - a.count;
+      });
+
+      const pointsMap = {};
+      const rankMap = {};
+      const statusMap = {};
+
+      appData.anglers.forEach(angler => {
+        const entryIdx = entries.findIndex(e => e.anglerId === angler.id);
+        
+        if (entryIdx === -1) {
+          pointsMap[angler.id] = 0;
+          rankMap[angler.id] = '-';
+          statusMap[angler.id] = 'DNF';
+        } else {
+          const entry = entries[entryIdx];
+          rankMap[angler.id] = entryIdx + 1;
+
+          if (entry.length === 0 && entry.count === 0) {
+            pointsMap[angler.id] = 1;
+            statusMap[angler.id] = 'BLANK';
+          } else {
+            const pts = Math.max(10 - entryIdx, 1);
+            pointsMap[angler.id] = pts;
+            statusMap[angler.id] = 'OK';
+          }
+        }
+      });
+
+      return { pointsMap, rankMap, statusMap, sortedEntries: entries };
+    }
+
+    function calculateOverallStandings() {
+      const legPointsByLeg = {};
+      const legStatusByLeg = {};
+
+      for (let l = 1; l <= 6; l++) {
+        const calculated = calculateLegPoints(l);
+        legPointsByLeg[l] = calculated.pointsMap;
+        legStatusByLeg[l] = calculated.statusMap;
+      }
+
+      const standings = appData.anglers.map(angler => {
+        const legScores = [];
+        let totalLengthAll = 0;
+        let totalCountAll = 0;
+
+        for (let l = 1; l <= 6; l++) {
+          const key = `${angler.id}_leg_${l}`;
+          const res = appData.results[key];
+          const pts = legPointsByLeg[l][angler.id] || 0;
+          const status = legStatusByLeg[l][angler.id] || 'DNF';
+
+          const len = (res && res.length !== null && res.length !== '') ? Number(res.length) : 0;
+          const cnt = (res && res.count !== null && res.count !== '') ? Number(res.count) : 0;
+
+          totalLengthAll += len;
+          totalCountAll += cnt;
+
+          legScores.push({
+            legId: l,
+            points: pts,
+            status: status,
+            length: len,
+            count: cnt
+          });
+        }
+
+        const sortedIndices = legScores
+          .map((item, index) => ({ index, points: item.points }))
+          .sort((a, b) => b.points - a.points);
+
+        const countedIndices = new Set(sortedIndices.slice(0, 4).map(item => item.index));
+
+        let best4Points = 0;
+        legScores.forEach((item, idx) => {
+          if (countedIndices.has(idx)) {
+            item.isCounted = true;
+            best4Points += item.points;
+          } else {
+            item.isCounted = false;
+          }
+        });
+
+        return {
+          angler,
+          legScores,
+          best4Points,
+          totalLengthAll,
+          totalCountAll
+        };
+      });
+
+      standings.sort((a, b) => {
+        if (b.best4Points !== a.best4Points) return b.best4Points - a.best4Points;
+        if (b.totalLengthAll !== a.totalLengthAll) return b.totalLengthAll - a.totalLengthAll;
+        return b.totalCountAll - a.totalCountAll;
+      });
+
+      return standings;
+    }
+
+    // RENDER FUNCTIONS
+    function renderApp() {
+      renderLeaderboard();
+      renderBreakdown();
+      renderLegSelector();
+      renderMatchEntry();
+      renderRoster();
+    }
+
+    function renderLeaderboard() {
+      const headerRow = document.getElementById('leaderboard-header-row');
+      const body = document.getElementById('leaderboard-body');
+
+      let headerHTML = `
+        <th class="col-pos">Pos</th>
+        <th class="col-name">Angler Name</th>
+      `;
+
+      appData.legs.forEach(leg => {
+        const venueText = leg.venue ? leg.venue : 'TBD';
+        const dateText = leg.date ? formatDate(leg.date) : 'No Date';
+        headerHTML += `
+          <th class="leg-header">
+            <span class="leg-title">L${leg.id}</span>
+            <span class="leg-venue" title="${venueText}">${venueText}</span>
+            <span class="leg-date">${dateText}</span>
+          </th>
+        `;
+      });
+
+      headerHTML += `
+        <th class="col-total-len">Total Len</th>
+        <th class="col-fish-cnt">Fish</th>
+        <th class="col-best-pts">Best 4 Pts</th>
+      `;
+      headerRow.innerHTML = headerHTML;
+
+      const standings = calculateOverallStandings();
+
+      if (standings.length === 0) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="11" class="empty-state">
+              <h3>No Anglers in Roster</h3>
+              <p>Go to the "Angler Roster" tab to add your club members.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      body.innerHTML = standings.map((item, idx) => {
+        const rank = idx + 1;
+        let rankBadgeClass = '';
+        if (rank === 1) rankBadgeClass = 'rank-1';
+        else if (rank === 2) rankBadgeClass = 'rank-2';
+        else if (rank === 3) rankBadgeClass = 'rank-3';
+
+        const rankDisplay = rankBadgeClass 
+          ? `<span class="rank-badge ${rankBadgeClass}">${rank}</span>` 
+          : `<span style="font-weight:600; color:var(--text-muted);">${rank}</span>`;
+
+        let legsCellsHTML = '';
+        item.legScores.forEach(score => {
+          let scoreDisplay = '';
+          let cls = score.isCounted ? 'score-counted' : 'score-dropped';
+
+          if (score.status === 'DNF') {
+            scoreDisplay = `<span class="score-dnf">DNF</span>`;
+          } else {
+            scoreDisplay = `${score.points} <span style="font-size:0.65rem; font-weight:normal; opacity:0.7;">pt</span>`;
+          }
+
+          legsCellsHTML += `
+            <td class="score-cell ${cls}">
+              ${scoreDisplay}
+            </td>
+          `;
+        });
+
+        return `
+          <tr>
+            <td class="col-pos">${rankDisplay}</td>
+            <td class="col-name" style="font-weight: 600;" title="${escapeHTML(item.angler.name)}">${escapeHTML(item.angler.name)}</td>
+            ${legsCellsHTML}
+            <td class="col-total-len" style="color: var(--text-muted);">${item.totalLengthAll} cm</td>
+            <td class="col-fish-cnt" style="color: var(--text-muted);">${item.totalCountAll}</td>
+            <td class="col-best-pts total-points">${item.best4Points}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderBreakdown() {
+      const container = document.getElementById('breakdown-grid-container');
+
+      if (appData.anglers.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1;" class="empty-state">
+            <h3>No Anglers in Roster</h3>
+            <p>Add anglers in the Roster tab to see match breakdowns.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = appData.legs.map(leg => {
+        const venueText = leg.venue ? leg.venue : 'TBD Venue';
+        const dateText = leg.date ? formatDate(leg.date) : 'No Date';
+        const { pointsMap, rankMap, statusMap } = calculateLegPoints(leg.id);
+
+        const sortedAnglers = [...appData.anglers].sort((a, b) => {
+          const rankA = rankMap[a.id] === '-' ? 999 : rankMap[a.id];
+          const rankB = rankMap[b.id] === '-' ? 999 : rankMap[b.id];
+          return rankA - rankB;
+        });
+
+        const listItems = sortedAnglers.map(angler => {
+          const rank = rankMap[angler.id];
+          const pts = pointsMap[angler.id];
+          const status = statusMap[angler.id];
+          const key = `${angler.id}_leg_${leg.id}`;
+          const res = appData.results[key] || {};
+
+          let badge = '';
+          let isWinner = false;
+
+          if (rank === 1 && status === 'OK') {
+            badge = '🥇';
+            isWinner = true;
+          } else if (rank === 2 && status === 'OK') {
+            badge = '🥈';
+          } else if (rank === 3 && status === 'OK') {
+            badge = '🥉';
+          }
+
+          let scoreMeta = '';
+          if (status === 'DNF') {
+            scoreMeta = `<span class="score-dnf">DNF</span>`;
+          } else if (status === 'BLANK') {
+            scoreMeta = `<span style="color:var(--accent-gold); font-size:0.8rem; font-weight:600;">Blank (1 pt)</span>`;
+          } else {
+            scoreMeta = `<span style="color:var(--text-muted); font-size:0.8rem;">${res.length || 0}cm / ${res.count || 0}f → <strong style="color:var(--primary);">${pts}pts</strong></span>`;
+          }
+
+          return `
+            <div class="breakdown-item ${isWinner ? 'first-place' : ''}">
+              <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+                <span style="font-weight:bold; font-size:0.8rem; color:var(--text-muted); width:20px;">${rank !== '-' ? '#' + rank : '-'}</span>
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:600;">${badge} ${escapeHTML(angler.name)}</span>
+              </div>
+              <div>${scoreMeta}</div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="breakdown-card">
+            <div class="breakdown-header">
+              <div class="breakdown-title">Leg ${leg.id}: ${escapeHTML(venueText)}</div>
+              <div class="breakdown-sub">${dateText}</div>
+            </div>
+            <div class="breakdown-list">
+              ${listItems}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLegSelector() {
+      const container = document.getElementById('leg-selector');
+      container.innerHTML = appData.legs.map(leg => {
+        const activeClass = leg.id === appData.currentSelectedLeg ? 'active' : '';
+        const venueLabel = leg.venue ? ` (${leg.venue})` : '';
+        return `
+          <button class="leg-btn ${activeClass}" onclick="selectLeg(${leg.id})">
+            Leg ${leg.id}${venueLabel}
+          </button>
+        `;
+      }).join('');
+
+      const currentLeg = appData.legs.find(l => l.id === appData.currentSelectedLeg);
+      if (currentLeg) {
+        document.getElementById('venue-name').value = currentLeg.venue || '';
+        document.getElementById('venue-date').value = currentLeg.date || '';
+      }
+    }
+
+    function selectLeg(legId) {
+      appData.currentSelectedLeg = legId;
+      renderLegSelector();
+      renderMatchEntry();
+    }
+
+    function saveLegVenueInfo() {
+      const leg = appData.legs.find(l => l.id === appData.currentSelectedLeg);
+      if (leg) {
+        leg.venue = document.getElementById('venue-name').value;
+        leg.date = document.getElementById('venue-date').value;
+        saveData();
+      }
+    }
+
+    function renderMatchEntry() {
+      const body = document.getElementById('match-entry-body');
+      const legId = appData.currentSelectedLeg;
+
+      if (appData.anglers.length === 0) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-state">
+              <h3>No Anglers Found</h3>
+              <p>Please add anglers in the Roster tab first.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const { pointsMap, rankMap, statusMap } = calculateLegPoints(legId);
+
+      body.innerHTML = appData.anglers.map(angler => {
+        const key = `${angler.id}_leg_${legId}`;
+        const res = appData.results[key] || { length: '', count: '' };
+        const pts = pointsMap[angler.id] || 0;
+        const rank = rankMap[angler.id] || '-';
+        const status = statusMap[angler.id];
+
+        let pointsText = '';
+        if (status === 'DNF') {
+          pointsText = `<span class="score-dnf">0 pts (DNF)</span>`;
+        } else if (status === 'BLANK') {
+          pointsText = `<span class="score-counted" style="color:var(--accent-gold);">1 pt (Blank)</span>`;
+        } else {
+          pointsText = `<span class="score-counted">${pts} pts</span>`;
+        }
+
+        return `
+          <tr>
+            <td style="font-weight: 600;">${escapeHTML(angler.name)}</td>
+            <td>
+              <input type="number" min="0" placeholder="DNF" value="${res.length !== undefined && res.length !== null ? res.length : ''}" 
+                style="width: 100px;"
+                onchange="updateScore('${angler.id}', ${legId}, 'length', this.value)"> cm
+            </td>
+            <td>
+              <input type="number" min="0" placeholder="DNF" value="${res.count !== undefined && res.count !== null ? res.count : ''}" 
+                style="width: 80px;"
+                onchange="updateScore('${angler.id}', ${legId}, 'count', this.value)">
+            </td>
+            <td><span style="font-weight:600; color:var(--text-muted);">${rank !== '-' ? '#' + rank : '-'}</span></td>
+            <td>${pointsText}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateScore(anglerId, legId, field, value) {
+      const key = `${anglerId}_leg_${legId}`;
+      if (!appData.results[key]) {
+        appData.results[key] = { length: '', count: '' };
+      }
+
+      if (value === '') {
+        appData.results[key][field] = '';
+      } else {
+        appData.results[key][field] = Number(value);
+      }
+
+      if (appData.results[key].length === '' && appData.results[key].count === '') {
+        delete appData.results[key];
+      }
+
+      saveData();
+    }
+
+    function renderRoster() {
+      const grid = document.getElementById('roster-grid-container');
+      document.getElementById('roster-count').innerText = appData.anglers.length;
+
+      if (appData.anglers.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;" class="empty-state">
+            <h3>Roster is Empty</h3>
+            <p>Add your club anglers using the form above.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = appData.anglers.map(angler => `
+        <div class="roster-card">
+          <span style="font-weight: 600;">${escapeHTML(angler.name)}</span>
+          <button class="btn btn-danger" style="padding: 4px 8px; font-size:0.8rem;" onclick="removeAngler('${angler.id}')">Remove</button>
+        </div>
+      `).join('');
+    }
+
+    function handleAddAngler(e) {
+      e.preventDefault();
+      const input = document.getElementById('new-angler-name');
+      const name = input.value.trim();
+      if (name) {
+        const newId = 'a_' + Date.now();
+        appData.anglers.push({ id: newId, name });
+        input.value = '';
+        saveData();
+      }
+    }
+
+    function removeAngler(id) {
+      if (confirm("Are you sure? Removing an angler deletes all their logged match results.")) {
+        appData.anglers = appData.anglers.filter(a => a.id !== id);
+        Object.keys(appData.results).forEach(key => {
+          if (key.startsWith(`${id}_`)) {
+            delete appData.results[key];
+          }
+        });
+        saveData();
+      }
+    }
+
+    // UTILS
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    }
+
+    // INITIALIZATION
+    loadData();
+    renderApp();
+  </script>
+</body>
+</html>
