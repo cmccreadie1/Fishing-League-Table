@@ -10,15 +10,15 @@
       --card-bg: #1e293b;
       --card-border: #334155;
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --text-muted: #cbd5e1;
       --primary: #38bdf8;
       --primary-hover: #0284c7;
       --accent-gold: #f59e0b;
-      --accent-silver: #94a3b8;
+      --accent-silver: #cbd5e1;
       --accent-bronze: #d97706;
       --dropped-color: #64748b;
       --danger: #ef4444;
-      --success: #22c55e;
+      --success: #4ade80;
     }
 
     * {
@@ -36,7 +36,7 @@
     }
 
     .container {
-      max-width: 1600px;
+      max-width: 1750px;
       margin: 0 auto;
     }
 
@@ -52,7 +52,7 @@
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       color: var(--primary);
       display: flex;
       align-items: center;
@@ -69,11 +69,11 @@
       background-color: var(--card-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border);
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
@@ -115,11 +115,11 @@
     }
 
     .tab-btn {
-      padding: 8px 16px;
+      padding: 10px 18px;
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       border-radius: 6px;
@@ -144,20 +144,20 @@
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 16px;
+      padding: 18px;
       margin-bottom: 20px;
     }
 
     .card-title {
-      font-size: 1.1rem;
-      margin-bottom: 12px;
+      font-size: 1.25rem;
+      margin-bottom: 14px;
       color: var(--primary);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* Table Styles - Fixed Layout to Prevent Squashing */
+    /* Table Styles - Widened Leg Columns */
     .table-container {
       overflow-x: auto;
     }
@@ -166,78 +166,78 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       table-layout: fixed;
     }
 
     th, td {
-      padding: 8px 6px;
+      padding: 10px 8px;
       border-bottom: 1px solid var(--card-border);
       white-space: nowrap;
     }
 
     th {
-      background-color: rgba(15, 23, 42, 0.6);
+      background-color: rgba(15, 23, 42, 0.7);
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.3px;
+      font-size: 0.8rem;
+      letter-spacing: 0.4px;
     }
 
     /* Column Width Allocation */
-    .col-pos { width: 44px; text-align: center; }
-    .col-name { width: 160px; overflow: hidden; text-overflow: ellipsis; }
+    .col-pos { width: 50px; text-align: center; }
+    .col-name { width: 175px; overflow: hidden; text-overflow: ellipsis; font-size: 1rem; }
 
     th.leg-header {
-      width: 100px;
+      width: 125px; /* Widened from 105px */
       text-align: center;
-      padding: 6px 4px;
+      padding: 8px 4px;
     }
 
-    .col-total-len { width: 90px; text-align: center; }
-    .col-fish-cnt { width: 70px; text-align: center; }
-    .col-best-pts { width: 90px; text-align: center; background-color: rgba(56, 189, 248, 0.15); }
+    .col-total-len { width: 95px; text-align: center; font-size: 0.95rem; }
+    .col-fish-cnt { width: 75px; text-align: center; font-size: 0.95rem; }
+    .col-best-pts { width: 95px; text-align: center; background-color: rgba(56, 189, 248, 0.15); }
 
     .leg-title {
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-size: 0.9rem;
+      font-weight: 800;
       color: var(--text-main);
       display: block;
     }
 
     .leg-venue {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--primary);
       display: block;
-      margin-top: 1px;
+      margin-top: 2px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 92px;
+      max-width: 118px; /* Expanded limit for venue text */
     }
 
     .leg-date {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       display: block;
-      margin-top: 1px;
+      margin-top: 2px;
       font-weight: normal;
     }
 
     tr:hover {
-      background-color: rgba(255, 255, 255, 0.02);
+      background-color: rgba(255, 255, 255, 0.03);
     }
 
     .rank-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-weight: bold;
-      font-size: 0.75rem;
+      font-weight: 800;
+      font-size: 0.85rem;
     }
 
     .rank-1 { background-color: var(--accent-gold); color: #000; }
@@ -246,32 +246,33 @@
 
     .score-cell {
       text-align: center;
-      font-weight: 600;
-      width: 100px;
+      font-weight: 700;
+      font-size: 1rem;
+      width: 125px; /* Matched to widened column width */
     }
 
     .score-dropped {
       color: var(--dropped-color);
       text-decoration: line-through;
       font-weight: normal;
-      opacity: 0.6;
+      opacity: 0.55;
     }
 
     .score-counted {
       color: var(--success);
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .score-dnf {
       color: var(--danger);
-      font-size: 0.75rem;
-      font-weight: 600;
-      opacity: 0.7;
+      font-size: 0.85rem;
+      font-weight: 700;
+      opacity: 0.8;
     }
 
     .total-points {
       color: var(--primary);
-      font-size: 1rem;
+      font-size: 1.15rem;
       font-weight: 800;
     }
 
@@ -279,11 +280,11 @@
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     label {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -292,9 +293,9 @@
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: 6px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     input:focus, select:focus {
@@ -304,21 +305,21 @@
 
     .leg-selector-bar {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       margin-bottom: 16px;
       overflow-x: auto;
       padding-bottom: 6px;
     }
 
     .leg-btn {
-      padding: 6px 12px;
+      padding: 8px 14px;
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       white-space: nowrap;
     }
 
@@ -330,18 +331,19 @@
 
     .roster-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
     }
 
     .roster-card {
       background-color: var(--bg-color);
       border: 1px solid var(--card-border);
-      padding: 10px 14px;
+      padding: 12px 16px;
       border-radius: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 1rem;
     }
 
     .empty-state {
@@ -359,14 +361,14 @@
       background-color: rgba(56, 189, 248, 0.05);
       border: 1px solid rgba(56, 189, 248, 0.2);
       border-radius: 6px;
-      padding: 14px;
-      margin-bottom: 16px;
+      padding: 16px;
+      margin-bottom: 18px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
     }
 
-    /* Side-by-side Breakdowns Grid */
+    /* Side-by-side Breakdowns Grid - 3 Column Layout */
     .breakdown-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -400,12 +402,12 @@
 
     .breakdown-title {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.05rem;
       color: var(--primary);
     }
 
     .breakdown-sub {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -420,8 +422,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
-      padding: 6px 10px;
+      font-size: 0.92rem;
+      padding: 8px 10px;
       border-radius: 6px;
       background-color: rgba(255, 255, 255, 0.02);
       border: 1px solid transparent;
@@ -467,7 +469,7 @@
     <header>
       <div>
         <h1>🎣 Fishing League Table</h1>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
           Best 4 of 6 Matches Count | 1st = 10pts down to 10th+ = 1pt for competing | Blank (0cm/0fish) = 1pt | Unentered = DNF
         </p>
       </div>
@@ -490,7 +492,7 @@
       <div class="card">
         <div class="card-title">
           <span>Overall Club Standings</span>
-          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">* Top 4 leg scores counted (green). Lowest 2 dropped.</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">* Top 4 leg scores counted (green). Lowest 2 dropped.</span>
         </div>
         <div class="table-container">
           <table id="leaderboard-table">
@@ -538,14 +540,14 @@
 
         <div class="card-title" style="margin-top: 20px;">Match Entries for Selected Leg</div>
         <div class="table-container">
-          <table style="width:100%;">
+          <table style="width:100%; font-size:0.95rem;">
             <thead>
               <tr>
-                <th>Angler Name</th>
-                <th>Total Length (cm)</th>
-                <th>Fish Count</th>
-                <th>Match Rank</th>
-                <th>Points Awarded</th>
+                <th style="font-size:0.85rem;">Angler Name</th>
+                <th style="font-size:0.85rem;">Total Length (cm)</th>
+                <th style="font-size:0.85rem;">Fish Count</th>
+                <th style="font-size:0.85rem;">Match Rank</th>
+                <th style="font-size:0.85rem;">Points Awarded</th>
               </tr>
             </thead>
             <tbody id="match-entry-body">
@@ -858,7 +860,7 @@
 
         const rankDisplay = rankBadgeClass 
           ? `<span class="rank-badge ${rankBadgeClass}">${rank}</span>` 
-          : `<span style="font-weight:600; color:var(--text-muted);">${rank}</span>`;
+          : `<span style="font-weight:700; color:var(--text-muted); font-size:1rem;">${rank}</span>`;
 
         let legsCellsHTML = '';
         item.legScores.forEach(score => {
@@ -868,7 +870,7 @@
           if (score.status === 'DNF') {
             scoreDisplay = `<span class="score-dnf">DNF</span>`;
           } else {
-            scoreDisplay = `${score.points} <span style="font-size:0.65rem; font-weight:normal; opacity:0.7;">pt</span>`;
+            scoreDisplay = `${score.points} <span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">pt</span>`;
           }
 
           legsCellsHTML += `
@@ -881,10 +883,10 @@
         return `
           <tr>
             <td class="col-pos">${rankDisplay}</td>
-            <td class="col-name" style="font-weight: 600;" title="${escapeHTML(item.angler.name)}">${escapeHTML(item.angler.name)}</td>
+            <td class="col-name" style="font-weight: 700;" title="${escapeHTML(item.angler.name)}">${escapeHTML(item.angler.name)}</td>
             ${legsCellsHTML}
-            <td class="col-total-len" style="color: var(--text-muted);">${item.totalLengthAll} cm</td>
-            <td class="col-fish-cnt" style="color: var(--text-muted);">${item.totalCountAll}</td>
+            <td class="col-total-len" style="color: var(--text-muted); font-weight:600;">${item.totalLengthAll} cm</td>
+            <td class="col-fish-cnt" style="color: var(--text-muted); font-weight:600;">${item.totalCountAll}</td>
             <td class="col-best-pts total-points">${item.best4Points}</td>
           </tr>
         `;
@@ -938,16 +940,16 @@
           if (status === 'DNF') {
             scoreMeta = `<span class="score-dnf">DNF</span>`;
           } else if (status === 'BLANK') {
-            scoreMeta = `<span style="color:var(--accent-gold); font-size:0.8rem; font-weight:600;">Blank (1 pt)</span>`;
+            scoreMeta = `<span style="color:var(--accent-gold); font-size:0.85rem; font-weight:700;">Blank (1 pt)</span>`;
           } else {
-            scoreMeta = `<span style="color:var(--text-muted); font-size:0.8rem;">${res.length || 0}cm / ${res.count || 0}f → <strong style="color:var(--primary);">${pts}pts</strong></span>`;
+            scoreMeta = `<span style="color:var(--text-muted); font-size:0.88rem;">${res.length || 0}cm / ${res.count || 0}f → <strong style="color:var(--primary); font-size:0.95rem;">${pts}pts</strong></span>`;
           }
 
           return `
             <div class="breakdown-item ${isWinner ? 'first-place' : ''}">
               <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
-                <span style="font-weight:bold; font-size:0.8rem; color:var(--text-muted); width:20px;">${rank !== '-' ? '#' + rank : '-'}</span>
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:600;">${badge} ${escapeHTML(angler.name)}</span>
+                <span style="font-weight:bold; font-size:0.88rem; color:var(--text-muted); width:22px;">${rank !== '-' ? '#' + rank : '-'}</span>
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700;">${badge} ${escapeHTML(angler.name)}</span>
               </div>
               <div>${scoreMeta}</div>
             </div>
@@ -1038,19 +1040,19 @@
 
         return `
           <tr>
-            <td style="font-weight: 600;">${escapeHTML(angler.name)}</td>
+            <td style="font-weight: 700; font-size:1rem;">${escapeHTML(angler.name)}</td>
             <td>
               <input type="number" min="0" placeholder="DNF" value="${res.length !== undefined && res.length !== null ? res.length : ''}" 
-                style="width: 100px;"
+                style="width: 110px; font-weight:600;"
                 onchange="updateScore('${angler.id}', ${legId}, 'length', this.value)"> cm
             </td>
             <td>
               <input type="number" min="0" placeholder="DNF" value="${res.count !== undefined && res.count !== null ? res.count : ''}" 
-                style="width: 80px;"
+                style="width: 90px; font-weight:600;"
                 onchange="updateScore('${angler.id}', ${legId}, 'count', this.value)">
             </td>
-            <td><span style="font-weight:600; color:var(--text-muted);">${rank !== '-' ? '#' + rank : '-'}</span></td>
-            <td>${pointsText}</td>
+            <td><span style="font-weight:700; color:var(--text-muted); font-size:1rem;">${rank !== '-' ? '#' + rank : '-'}</span></td>
+            <td style="font-size:1.05rem;">${pointsText}</td>
           </tr>
         `;
       }).join('');
@@ -1091,8 +1093,8 @@
 
       grid.innerHTML = appData.anglers.map(angler => `
         <div class="roster-card">
-          <span style="font-weight: 600;">${escapeHTML(angler.name)}</span>
-          <button class="btn btn-danger" style="padding: 4px 8px; font-size:0.8rem;" onclick="removeAngler('${angler.id}')">Remove</button>
+          <span style="font-weight: 700;">${escapeHTML(angler.name)}</span>
+          <button class="btn btn-danger" style="padding: 4px 10px; font-size:0.85rem;" onclick="removeAngler('${angler.id}')">Remove</button>
         </div>
       `).join('');
     }
