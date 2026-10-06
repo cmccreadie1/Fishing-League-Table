@@ -21,6 +21,7 @@
       --dropped-color: #64748b;
       --danger: #ef4444;
       --success: #4ade80;
+      --static-col-bg: #172033;
     }
 
     * {
@@ -217,7 +218,7 @@
     }
 
     th {
-      background-color: #0f172a;
+      background-color: #0b1329;
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
@@ -228,33 +229,59 @@
       z-index: 2;
     }
 
-    /* Sticky Angler Name & Position Column */
+    /* Distinct Static Panel (Rank + Name) vs. Interactive Sliding Area */
     .col-pos { 
       position: sticky;
       left: 0;
       z-index: 3;
-      background-color: #1e293b;
-      width: 38px;
+      background-color: var(--static-col-bg);
+      min-width: 55px;
       text-align: center;
-      border-right: 1px solid var(--card-border);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 6px 4px;
     }
 
-    th.col-pos { background-color: #0f172a; }
+    th.col-pos { background-color: #0b1329; }
 
     .col-name { 
       position: sticky;
-      left: 38px;
+      left: 55px;
       z-index: 3;
-      background-color: #1e293b;
+      background-color: var(--static-col-bg);
       min-width: 140px;
-      max-width: 150px;
+      max-width: 155px;
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 0.9rem;
-      border-right: 2px solid var(--card-border);
+      border-right: 2px solid var(--primary);
+      box-shadow: 4px 0 8px rgba(0, 0, 0, 0.4);
     }
 
-    th.col-name { background-color: #0f172a; }
+    th.col-name { 
+      background-color: #0b1329;
+      border-right: 2px solid var(--primary);
+      box-shadow: 4px 0 8px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Dual-entry Rank & Points Display */
+    .rank-points-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .pts-pill {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--primary);
+      background-color: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 1px 5px;
+      border-radius: 10px;
+      line-height: 1.1;
+    }
 
     th.leg-header {
       min-width: 95px;
@@ -264,7 +291,6 @@
 
     .col-total-len { min-width: 80px; text-align: center; font-size: 0.88rem; }
     .col-fish-cnt { min-width: 65px; text-align: center; font-size: 0.88rem; }
-    .col-best-pts { min-width: 80px; text-align: center; background-color: rgba(56, 189, 248, 0.15); }
 
     .leg-title {
       font-size: 0.82rem;
@@ -300,11 +326,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       font-weight: 800;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
     }
 
     .rank-1 { background-color: var(--accent-gold); color: #000; }
@@ -334,12 +360,6 @@
       font-size: 0.8rem;
       font-weight: 700;
       opacity: 0.8;
-    }
-
-    .total-points {
-      color: var(--primary);
-      font-size: 1.05rem;
-      font-weight: 800;
     }
 
     /* Podium Cards */
@@ -1204,7 +1224,7 @@
       const body = document.getElementById('leaderboard-body');
 
       let headerHTML = `
-        <th class="col-pos">#</th>
+        <th class="col-pos"># / PTS</th>
         <th class="col-name">Angler Name</th>
       `;
 
@@ -1223,7 +1243,6 @@
       headerHTML += `
         <th class="col-total-len">Total Len</th>
         <th class="col-fish-cnt">Fish</th>
-        <th class="col-best-pts">Best 4</th>
       `;
       headerRow.innerHTML = headerHTML;
 
@@ -1232,7 +1251,7 @@
       if (standings.length === 0) {
         body.innerHTML = `
           <tr>
-            <td colspan="11" class="empty-state">
+            <td colspan="10" class="empty-state">
               <h3>No Anglers in Roster</h3>
             </td>
           </tr>
@@ -1247,9 +1266,16 @@
         else if (rank === 2) rankBadgeClass = 'rank-2';
         else if (rank === 3) rankBadgeClass = 'rank-3';
 
-        const rankDisplay = rankBadgeClass 
+        const rankBadgeHtml = rankBadgeClass 
           ? `<span class="rank-badge ${rankBadgeClass}">${rank}</span>` 
-          : `<span style="font-weight:700; color:var(--text-muted); font-size:0.85rem;">${rank}</span>`;
+          : `<span style="font-weight:700; color:var(--text-muted); font-size:0.78rem;">#${rank}</span>`;
+
+        const rankPointsComposite = `
+          <div class="rank-points-cell">
+            ${rankBadgeHtml}
+            <span class="pts-pill">${item.best4Points}p</span>
+          </div>
+        `;
 
         let legsCellsHTML = '';
         item.legScores.forEach(score => {
@@ -1267,12 +1293,11 @@
 
         return `
           <tr>
-            <td class="col-pos">${rankDisplay}</td>
+            <td class="col-pos">${rankPointsComposite}</td>
             <td class="col-name" style="font-weight: 700;" title="${escapeHTML(item.angler.name)}">${escapeHTML(item.angler.name)}</td>
             ${legsCellsHTML}
             <td class="col-total-len" style="color: var(--text-muted); font-weight:600;">${item.totalLengthAll} cm</td>
             <td class="col-fish-cnt" style="color: var(--text-muted); font-weight:600;">${item.totalCountAll}</td>
-            <td class="col-best-pts total-points">${item.best4Points}</td>
           </tr>
         `;
       }).join('');
