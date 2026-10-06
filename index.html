@@ -589,22 +589,6 @@
       color: var(--primary);
     }
 
-    .progress-bar-container {
-      width: 100%;
-      background-color: var(--bg-color);
-      height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 8px;
-      border: 1px solid var(--card-border);
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background-color: var(--primary);
-      transition: width 0.3s ease;
-    }
-
     .bulletin-footer {
       text-align: center;
       padding: 16px 0 8px;
@@ -787,7 +771,7 @@
       </div>
 
       <div class="bulletin-footer">
-        <p id="bulletin-last-updated">Official League Bulletin • Updated Live</p>
+        <p id="bulletin-last-updated">Official Competition Bulletin • Updated Live</p>
       </div>
     </div>
   </div>
@@ -868,6 +852,52 @@
 
     let isPublicView = false;
 
+    // DATA MINIFICATION & UNPACKING FOR SHORT URLS
+    function minifyAppData(data) {
+      const minData = {
+        t: data.title || "",
+        a: (data.anglers || []).map(a => ({ i: a.id, n: a.name })),
+        l: (data.legs || []).filter(l => l.venue || l.date).map(l => ({ i: l.id, v: l.venue, d: l.date })),
+        r: {}
+      };
+
+      Object.keys(data.results || {}).forEach(k => {
+        const item = data.results[k];
+        if (item && (item.length > 0 || item.count > 0 || item.length === 0)) {
+          minData.r[k] = [item.length || 0, item.count || 0];
+        }
+      });
+
+      return minData;
+    }
+
+    function unpackMinifiedData(minData) {
+      if (!minData.a || !minData.l) return null;
+
+      const fullLegs = JSON.parse(JSON.stringify(DEFAULT_LEGS));
+      (minData.l || []).forEach(ml => {
+        const target = fullLegs.find(fl => fl.id === ml.i);
+        if (target) {
+          target.venue = ml.v || "";
+          target.date = ml.d || "";
+        }
+      });
+
+      const fullResults = {};
+      Object.keys(minData.r || {}).forEach(k => {
+        const arr = minData.r[k];
+        fullResults[k] = { length: arr[0], count: arr[1] };
+      });
+
+      return {
+        title: minData.t || "Club Fishing League Table",
+        anglers: (minData.a || []).map(ma => ({ id: ma.i, name: ma.n })),
+        legs: fullLegs,
+        results: fullResults,
+        currentSelectedLeg: 1
+      };
+    }
+
     // RENAME COMPETITION LEAGUE TITLE
     function promptEditLeagueTitle() {
       const currentTitle = appData.title || "Club Fishing League Table";
@@ -888,7 +918,13 @@
         try {
           const decompressed = LZString.decompressFromEncodedURIComponent(encodedData);
           if (decompressed) {
-            appData = JSON.parse(decompressed);
+            const parsed = JSON.parse(decompressed);
+            if (parsed.a && parsed.r) {
+              const unpacked = unpackMinifiedData(parsed);
+              if (unpacked) appData = unpacked;
+            } else {
+              appData = parsed;
+            }
           }
         } catch (e) {
           console.error("Failed to parse URL encoded data", e);
@@ -906,35 +942,18 @@
       }
     }
 
-    // COPY SHORT SHAREABLE LINK VIA IS.GD SHORTENER
+    // LOCAL COMPRESSION & SHORT SHAREABLE LINK COPY
     function copyShareableLink() {
       const baseURL = window.location.href.split('?')[0];
-      const jsonStr = JSON.stringify(appData);
+      const minified = minifyAppData(appData);
+      const jsonStr = JSON.stringify(minified);
       const compressed = LZString.compressToEncodedURIComponent(jsonStr);
-      const fullLongURL = `${baseURL}?data=${compressed}&view=bulletin`;
+      const shareURL = `${baseURL}?data=${compressed}&view=bulletin`;
 
-      const apiURL = `https://is.gd/create.php?format=json&url=${encodeURIComponent(fullLongURL)}`;
-
-      fetch(apiURL)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.shorturl) {
-            navigator.clipboard.writeText(data.shorturl);
-            alert(`📋 Short Link Copied!\n\n${data.shorturl}\n\nYou can now paste this straight into WhatsApp.`);
-          } else {
-            fallbackCopyURL(fullLongURL);
-          }
-        })
-        .catch(err => {
-          fallbackCopyURL(fullLongURL);
-        });
-    }
-
-    function fallbackCopyURL(url) {
-      navigator.clipboard.writeText(url).then(() => {
-        alert("📋 Shareable Link copied to clipboard!");
-      }).catch(() => {
-        prompt("Copy this link to share:", url);
+      navigator.clipboard.writeText(shareURL).then(() => {
+        alert("📋 Compact Shareable Web Link copied to clipboard!\n\nYou can now paste this link directly into WhatsApp for your club members.");
+      }).catch(err => {
+        prompt("Copy this link to share with competitors:", shareURL);
       });
     }
 
