@@ -21,7 +21,6 @@
       --dropped-color: #64748b;
       --danger: #ef4444;
       --success: #4ade80;
-      --static-col-bg: #172033;
     }
 
     * {
@@ -169,7 +168,7 @@
       gap: 6px;
     }
 
-    /* Scroll Prompt & Sticky Column Table Styles */
+    /* Scroll Prompt & Unified Table Styles */
     .table-container {
       overflow-x: auto;
       position: relative;
@@ -205,14 +204,13 @@
 
     #leaderboard-table, .bulletin-table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
+      border-collapse: collapse;
       text-align: left;
       font-size: 0.88rem;
     }
 
     th, td {
-      padding: 8px 6px;
+      padding: 8px 10px;
       border-bottom: 1px solid var(--card-border);
       white-space: nowrap;
     }
@@ -224,43 +222,21 @@
       text-transform: uppercase;
       font-size: 0.75rem;
       letter-spacing: 0.3px;
-      position: sticky;
-      top: 0;
-      z-index: 2;
     }
 
-    /* Distinct Static Panel (Rank + Name) vs. Interactive Sliding Area */
+    /* Standard Columns (No Sticky Pinning) */
     .col-pos { 
-      position: sticky;
-      left: 0;
-      z-index: 3;
-      background-color: var(--static-col-bg);
       min-width: 58px;
       text-align: center;
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
       padding: 6px 4px;
     }
 
-    th.col-pos { background-color: #0b1329; }
-
     .col-name { 
-      position: sticky;
-      left: 58px;
-      z-index: 3;
-      background-color: var(--static-col-bg);
       min-width: 140px;
-      max-width: 155px;
+      max-width: 160px;
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 0.9rem;
-      border-right: 2px solid var(--primary);
-      box-shadow: 4px 0 8px rgba(0, 0, 0, 0.4);
-    }
-
-    th.col-name { 
-      background-color: #0b1329;
-      border-right: 2px solid var(--primary);
-      box-shadow: 4px 0 8px rgba(0, 0, 0, 0.4);
     }
 
     /* Dual-entry Rank & Points Display */
@@ -657,7 +633,7 @@
             <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">* Top 4 leg scores count (green)</span>
           </div>
           <div class="scroll-hint">
-            <span>👈 Scroll table horizontally to view all leg scores 👉</span>
+            <span>👈 Swipe left / right to view full standings table 👉</span>
           </div>
           <div class="table-container" id="admin-table-container">
             <table id="leaderboard-table">
@@ -773,7 +749,7 @@
           <span style="font-size:0.78rem; color:var(--text-muted); font-weight:normal;">* Best 4 out of 6 leg scores count</span>
         </div>
         <div class="scroll-hint">
-          <span>👈 Swipe table left/right to view all 6 leg scores 👉</span>
+          <span>👈 Swipe left / right to view full standings table 👉</span>
         </div>
         <div class="table-container" id="bulletin-table-container">
           <table class="bulletin-table" id="bulletin-table">
