@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Club Fishing League Table</title>
+  <!-- LZ-String library for URL compression -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -720,7 +722,7 @@
   </div>
 
   <script>
-    // YOUR LIVE SEASON DATA (INCORPORATED)
+    // BASELINE DEFAULT DATA
     const DEFAULT_DATA = {
       "anglers": [
         { "id": "a_1791227057506", "name": "Stewart Crilly" },
@@ -793,6 +795,46 @@
 
     let isPublicView = false;
 
+    // CHECK URL FOR ENCODED DATA & SHAREABLE BULLETIN MODE
+    function checkURLViewMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedData = urlParams.get('data');
+      const isBulletin = urlParams.get('view') === 'bulletin';
+
+      if (encodedData) {
+        try {
+          const decompressed = LZString.decompressFromEncodedURIComponent(encodedData);
+          if (decompressed) {
+            appData = JSON.parse(decompressed);
+          }
+        } catch (e) {
+          console.error("Failed to parse URL encoded data", e);
+        }
+      }
+
+      if (isBulletin || encodedData) {
+        isPublicView = true;
+        document.getElementById('admin-header').style.display = 'none';
+        document.getElementById('admin-tabs').style.display = 'none';
+        document.getElementById('admin-content').style.display = 'none';
+        document.getElementById('bulletin-view').style.display = 'block';
+        document.getElementById('btn-back-admin').style.display = 'none';
+      }
+    }
+
+    function copyShareableLink() {
+      const baseURL = window.location.href.split('?')[0];
+      const jsonStr = JSON.stringify(appData);
+      const compressed = LZString.compressToEncodedURIComponent(jsonStr);
+      const shareURL = `${baseURL}?data=${compressed}&view=bulletin`;
+
+      navigator.clipboard.writeText(shareURL).then(() => {
+        alert("📋 Shareable Web Link copied to clipboard!\n\nThis link contains all your latest scores. You can paste it straight into WhatsApp for your members.");
+      }).catch(err => {
+        prompt("Copy this link to share with competitors:", shareURL);
+      });
+    }
+
     // LOCAL STORAGE MANAGEMENT WITH DEFAULT_DATA FALLBACK
     function loadData() {
       const saved = localStorage.getItem('fishing_league_data');
@@ -815,7 +857,7 @@
     // RESET FOR NEW SEASON
     function confirmResetNewSeason() {
       if (confirm("End Season & Reset?\n\nThis will export a backup of the current season and clear match results so you can start a fresh competition year with your angler roster intact.")) {
-        exportDataJSON(); // Automatically download backup first for safety
+        exportDataJSON();
         appData.results = {};
         appData.legs = JSON.parse(JSON.stringify(DEFAULT_LEGS));
         appData.currentSelectedLeg = 1;
@@ -863,19 +905,6 @@
       reader.readAsText(file);
     }
 
-    // CHECK URL FOR SHAREABLE BULLETIN MODE
-    function checkURLViewMode() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('view') === 'bulletin') {
-        isPublicView = true;
-        document.getElementById('admin-header').style.display = 'none';
-        document.getElementById('admin-tabs').style.display = 'none';
-        document.getElementById('admin-content').style.display = 'none';
-        document.getElementById('bulletin-view').style.display = 'block';
-        document.getElementById('btn-back-admin').style.display = 'none';
-      }
-    }
-
     function showBulletinView() {
       document.getElementById('admin-header').style.display = 'none';
       document.getElementById('admin-tabs').style.display = 'none';
@@ -890,16 +919,6 @@
       document.getElementById('admin-header').style.display = 'flex';
       document.getElementById('admin-tabs').style.display = 'flex';
       document.getElementById('admin-content').style.display = 'block';
-    }
-
-    function copyShareableLink() {
-      const baseURL = window.location.href.split('?')[0];
-      const shareURL = `${baseURL}?view=bulletin`;
-      navigator.clipboard.writeText(shareURL).then(() => {
-        alert("📋 Shareable Web Link copied to clipboard!\n\nYou can now paste this link directly into WhatsApp for your club members.");
-      }).catch(err => {
-        prompt("Copy this link to share with competitors:", shareURL);
-      });
     }
 
     // DEMO DATA GENERATOR
@@ -1466,8 +1485,8 @@
 
     // INITIALIZATION
     loadData();
-    renderApp();
     checkURLViewMode();
+    renderApp();
   </script>
 </body>
 </html>
