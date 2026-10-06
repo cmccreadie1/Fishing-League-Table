@@ -942,7 +942,7 @@
       }
     }
 
-    // LOCAL COMPRESSION & SHORT SHAREABLE LINK COPY
+    // RICH TEXT HYPERLINK COPY TO CLIPBOARD
     function copyShareableLink() {
       const baseURL = window.location.href.split('?')[0];
       const minified = minifyAppData(appData);
@@ -950,10 +950,32 @@
       const compressed = LZString.compressToEncodedURIComponent(jsonStr);
       const shareURL = `${baseURL}?data=${compressed}&view=bulletin`;
 
-      navigator.clipboard.writeText(shareURL).then(() => {
-        alert("📋 Compact Shareable Web Link copied to clipboard!\n\nYou can now paste this link directly into WhatsApp for your club members.");
-      }).catch(err => {
-        prompt("Copy this link to share with competitors:", shareURL);
+      const linkTitle = "🏆 View Live League Scores & Standings";
+      const htmlText = `<a href="${shareURL}">${linkTitle}</a>`;
+
+      if (navigator.clipboard && window.ClipboardItem) {
+        const blobHTML = new Blob([htmlText], { type: 'text/html' });
+        const blobPlain = new Blob([`${linkTitle}: ${shareURL}`], { type: 'text/plain' });
+        const item = new ClipboardItem({
+          'text/html': blobHTML,
+          'text/plain': blobPlain
+        });
+
+        navigator.clipboard.write([item]).then(() => {
+          alert(`📋 Hyperlink Copied!\n\nPasted text will display as:\n"${linkTitle}"\n\nYou can now paste it directly into WhatsApp.`);
+        }).catch(() => {
+          fallbackCopyText(`${linkTitle}\n${shareURL}`);
+        });
+      } else {
+        fallbackCopyText(`${linkTitle}\n${shareURL}`);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("📋 Link text copied to clipboard!");
+      }).catch(() => {
+        prompt("Copy this text to share:", text);
       });
     }
 
